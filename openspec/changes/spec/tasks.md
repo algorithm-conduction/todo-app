@@ -8,4 +8,4 @@
 - [x] 4. Create `public/index.html` — simple frontend that calls the API
 - [x] 5. Create `test/api.test.js` — integration tests covering all scenarios from specs/api.md
 - [x] 6. Verify all tests pass with `npm test`
-- [ ] 7. Open draft PR with summary, spec reference, changes, and test coverage
+- [x] 7. Open draft PR with summary, spec reference, changes, and test coverage

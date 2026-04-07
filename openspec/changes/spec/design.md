@@ -1,7 +1,7 @@
 # Design: Todo MVP
 
 ## Status
-proposed
+pr-created
 
 ## Overview
 A minimal TODO app: Node.js + Express REST API with an in-memory store,
