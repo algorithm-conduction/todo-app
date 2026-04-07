@@ -1,0 +1,19 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "Minimal TODO app — Node.js + Express REST API with vanilla HTML/JS frontend",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "vitest run"
+  },
+  "license": "EUPL-1.2",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "supertest": "^6.3.4",
+    "vitest": "^1.0.0"
+  }
+}

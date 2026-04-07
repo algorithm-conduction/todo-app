@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--
+  SPDX-License-Identifier: EUPL-1.2
+  Copyright (C) 2026 Conduction B.V.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo App</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { margin-bottom: 1rem; }
+    #add-form { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+    #add-form input { flex: 1; padding: 0.5rem; font-size: 1rem; }
+    #add-form button { padding: 0.5rem 1rem; cursor: pointer; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+    li span { flex: 1; }
+    li.completed span { text-decoration: line-through; color: #888; }
+    button.delete { color: red; background: none; border: none; cursor: pointer; font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+  <h1>Todo App</h1>
+
+  <form id="add-form">
+    <input id="new-title" type="text" placeholder="What needs doing?" required />
+    <button type="submit">Add</button>
+  </form>
+
+  <ul id="todo-list"></ul>
+
+  <script>
+    const API = '/api/todos'
+
+    async function loadTodos () {
+      const res = await fetch(API)
+      const todos = await res.json()
+      renderTodos(todos)
+    }
+
+    function renderTodos (todos) {
+      const list = document.getElementById('todo-list')
+      list.innerHTML = ''
+      todos.forEach(todo => {
+        const li = document.createElement('li')
+        if (todo.completed) li.classList.add('completed')
+
+        const cb = document.createElement('input')
+        cb.type = 'checkbox'
+        cb.checked = todo.completed
+        cb.addEventListener('change', () => toggleTodo(todo.id, cb.checked))
+
+        const span = document.createElement('span')
+        span.textContent = todo.title
+
+        const del = document.createElement('button')
+        del.className = 'delete'
+        del.textContent = '✕'
+        del.addEventListener('click', () => deleteTodo(todo.id))
+
+        li.append(cb, span, del)
+        list.appendChild(li)
+      })
+    }
+
+    async function addTodo (title) {
+      await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title })
+      })
+      loadTodos()
+    }
+
+    async function toggleTodo (id, completed) {
+      await fetch(`${API}/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ completed })
+      })
+      loadTodos()
+    }
+
+    async function deleteTodo (id) {
+      await fetch(`${API}/${id}`, { method: 'DELETE' })
+      loadTodos()
+    }
+
+    document.getElementById('add-form').addEventListener('submit', e => {
+      e.preventDefault()
+      const input = document.getElementById('new-title')
+      const title = input.value.trim()
+      if (title) {
+        addTodo(title)
+        input.value = ''
+      }
+    })
+
+    loadTodos()
+  </script>
+</body>
+</html>
